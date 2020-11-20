@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:passcode_screen/passcode_screen.dart';
 import 'package:image/pages/home_page.dart';
 import 'dart:async';
+import 'package:vibration/vibration.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,6 +12,21 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final StreamController<bool> _verificationNotifier =
       StreamController<bool>.broadcast();
+  bool _canVibrate = false;
+
+  void checkVibration() async {
+    if (await Vibration.hasVibrator()) {
+      setState(() {
+        _canVibrate = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    checkVibration();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -36,9 +52,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         passwordDigits: 9,
-        passwordEnteredCallback: (enteredPassword) {
+        passwordEnteredCallback: (enteredPassword) async {
           bool isValid = '789456123' == enteredPassword;
           _verificationNotifier.add(isValid);
+          if (_canVibrate && !isValid) await Vibration.vibrate();
         },
         cancelButton: FlatButton(
           child: Text(
