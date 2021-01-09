@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class NoGlowOverscrollConfiguration extends ScrollBehavior {
   @override
@@ -26,91 +27,21 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: Column(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: PageView(
+          controller: _controller,
           children: [
-            Expanded(
-              flex: 1,
-              child: Container(
-                color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    for (var i = 1; i <= 6; i++)
-                      GestureDetector(
-                        onTap: () {
-                          int pageNo;
-                          switch (i) {
-                            case 1:
-                              pageNo = 0;
-                              break;
-                            case 2:
-                              pageNo = 41;
-                              break;
-                            case 3:
-                              pageNo = 92;
-                              break;
-                            case 4:
-                              pageNo = 140;
-                              break;
-                            case 5:
-                              pageNo = 193;
-                              break;
-                            case 6:
-                              pageNo = 270;
-                              break;
-                            default:
-                              pageNo = 0;
-                          }
-                          _controller.animateToPage(
-                            pageNo,
-                            duration: Duration(seconds: 1),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '$i',
-                              style: TextStyle(
-                                fontSize: 25,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
+            for (int i = 0; i < 84; i++)
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/$i.jpg'),
+                    fit: BoxFit.scaleDown,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 6,
-              child: ScrollConfiguration(
-                behavior: NoGlowOverscrollConfiguration(),
-                child: PageView(
-                  controller: _controller,
-                  children: [
-                    for (int i = 1; i <= 359; i++)
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          image: DecorationImage(
-                            image: AssetImage('assets/images/$i.jpg'),
-                            fit: BoxFit.scaleDown,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
